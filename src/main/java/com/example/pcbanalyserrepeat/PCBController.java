@@ -86,6 +86,8 @@ public class PCBController implements Initializable {
 
             reader = imageDrop.getImage().getPixelReader();
 
+            //Sets the text of the pixel at the x and y position to the colour output of the pixel at the x and y position
+
             redLabel.setText(String.format("%.2f", reader.getColor(x, y).getRed()));
             greenLabel.setText(String.format("%.2f", reader.getColor(x, y).getGreen()));
             blueLabel.setText(String.format("%.2f", reader.getColor(x, y).getBlue()));
@@ -104,6 +106,8 @@ public class PCBController implements Initializable {
                     Double.parseDouble(saturationLabel.getText()),
                     Double.parseDouble(brightnessLabel.getText()))
             );
+
+            //Stores into my linked list
 
             partStore.getItems().clear();
             for(int i = Statics.parts.size() - 1; i >= 0; i--){
@@ -124,7 +128,7 @@ public class PCBController implements Initializable {
                 + File.separator + "OneDrive"
                 + File.separator + "Documents"
                 + File.separator + "GitHub"
-                + File.separator + "PCB-Analyser"
+                + File.separator + "Disjoint-Assignment"
                 + File.separator + "images";
         File userDirectory = new File(userDir);
 
@@ -147,14 +151,22 @@ public class PCBController implements Initializable {
         deleteRect(processedImage);
         WritableImage writableImage = new WritableImage(reader,(int) inputImage.getWidth(),(int) inputImage.getHeight());
 
+        //Sets to the width of the image and height of the image
+
         int width = (int) inputImage.getWidth();
         int height = (int) inputImage.getHeight();
         PixelWriter writer = writableImage.getPixelWriter();
 
         imageSize = new int[width * height];
 
+        //Checking the name of the part that's stored, and comparing them to the linked list of parts and producing that object.
+
         Parts p = Statics.parts.search(parts -> parts.getName().equals(partStore.getValue().toString()));
         int id = 0;
+
+        /*Getting the colour components of the part and comparing them to the pixel colour components of the image. Running through the limitations, if the colour components match they
+        *set to black, else they're set to white.
+        */
 
         for(int ht = 0; ht < height; ht++){
             for(int wh = 0; wh < width; wh++){
@@ -183,6 +195,10 @@ public class PCBController implements Initializable {
         }
         processedImage.setImage(writableImage);
 
+        /*
+        * Checking the pixels around one another and if they have similar id then they are connected to the root.
+         */
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++){
                 if (imageSize[i * width + j] != 0 && imageSize[i * width + j + 1] != 0) {
@@ -193,6 +209,10 @@ public class PCBController implements Initializable {
                 }
             }
         }
+
+        /*
+        * Checking for duplicate roots.
+         */
 
         for(int i = 0; i < imageSize.length; i++){
             S = Statics.disjointSet;
