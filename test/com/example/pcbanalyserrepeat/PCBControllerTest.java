@@ -57,6 +57,9 @@ class PCBControllerTest {
         assertNotEquals(1, roots.size());
         assertNotEquals(2, roots.size());
         assertNotEquals(4, roots.size());
+        assertEquals(2, PCBController.countPixels(1, image), 0.0);
+        assertEquals(4, PCBController.countPixels(7, image), 0.0);
+        assertNotEquals(4, PCBController.countPixels(1, image), 0.0);
     }
 
 

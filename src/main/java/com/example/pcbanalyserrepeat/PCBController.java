@@ -328,7 +328,7 @@ public class PCBController implements Initializable {
         roots.removeIf(integer -> (countPixels(integer, imageSize) / imageSize.length) * 100 < reduction);
     }
 
-    private static double countPixels(int i, int[] a){
+        public static double countPixels(int i, int[] a){
         int pixels = 0;
         for(int j = 0; j < a.length; j++){
             if(i == Statics.disjointSet.find(a, j)){
